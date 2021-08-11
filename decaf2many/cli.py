@@ -8,6 +8,7 @@ from .decaf2many import Transpiler
 from .lang.JavaLexer import JavaLexer
 from .lang.JavaParser import JavaParser
 
+
 def run_one(filename):
     lexer = JavaLexer(FileStream(filename))
     stream = CommonTokenStream(lexer)
