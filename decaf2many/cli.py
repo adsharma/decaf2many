@@ -2,8 +2,8 @@
 import argparse
 import sys
 
+from antlr4 import CommonTokenStream, FileStream
 
-from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 from .decaf2many import Transpiler
 from .lang.JavaLexer import JavaLexer
 from .lang.JavaParser import JavaParser
