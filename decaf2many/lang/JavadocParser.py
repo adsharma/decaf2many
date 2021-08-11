@@ -224,6 +224,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitDocumentation" ):
                 listener.exitDocumentation(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDocumentation" ):
+                return visitor.visitDocumentation(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -328,6 +334,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDocumentationContent" ):
                 listener.exitDocumentationContent(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDocumentationContent" ):
+                return visitor.visitDocumentationContent(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -439,6 +451,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitSkipWhitespace" ):
                 listener.exitSkipWhitespace(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSkipWhitespace" ):
+                return visitor.visitSkipWhitespace(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -494,6 +512,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDescription" ):
                 listener.exitDescription(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescription" ):
+                return visitor.visitDescription(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -569,6 +593,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDescriptionLine" ):
                 listener.exitDescriptionLine(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionLine" ):
+                return visitor.visitDescriptionLine(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -659,6 +689,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDescriptionLineStart" ):
                 listener.exitDescriptionLineStart(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionLineStart" ):
+                return visitor.visitDescriptionLineStart(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -762,6 +798,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitDescriptionLineNoSpaceNoAt" ):
                 listener.exitDescriptionLineNoSpaceNoAt(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionLineNoSpaceNoAt" ):
+                return visitor.visitDescriptionLineNoSpaceNoAt(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -811,6 +853,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDescriptionLineElement" ):
                 listener.exitDescriptionLineElement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionLineElement" ):
+                return visitor.visitDescriptionLineElement(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -880,6 +928,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitDescriptionLineText" ):
                 listener.exitDescriptionLineText(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionLineText" ):
+                return visitor.visitDescriptionLineText(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -947,6 +1001,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitDescriptionNewline" ):
                 listener.exitDescriptionNewline(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDescriptionNewline" ):
+                return visitor.visitDescriptionNewline(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -989,6 +1049,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitTagSection" ):
                 listener.exitTagSection(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitTagSection" ):
+                return visitor.visitTagSection(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1056,6 +1122,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBlockTag" ):
                 listener.exitBlockTag(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlockTag" ):
+                return visitor.visitBlockTag(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1126,6 +1198,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitBlockTagName" ):
                 listener.exitBlockTagName(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlockTagName" ):
+                return visitor.visitBlockTagName(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1172,6 +1250,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBlockTagContent" ):
                 listener.exitBlockTagContent(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlockTagContent" ):
+                return visitor.visitBlockTagContent(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1233,6 +1317,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBlockTagText" ):
                 listener.exitBlockTagText(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlockTagText" ):
+                return visitor.visitBlockTagText(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1303,6 +1393,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitBlockTagTextElement" ):
                 listener.exitBlockTagTextElement(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlockTagTextElement" ):
+                return visitor.visitBlockTagTextElement(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1364,6 +1460,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInlineTag" ):
                 listener.exitInlineTag(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInlineTag" ):
+                return visitor.visitInlineTag(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1428,6 +1530,12 @@ class JavadocParser ( Parser ):
             if hasattr( listener, "exitInlineTagName" ):
                 listener.exitInlineTagName(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInlineTagName" ):
+                return visitor.visitInlineTagName(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1470,6 +1578,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInlineTagContent" ):
                 listener.exitInlineTagContent(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInlineTagContent" ):
+                return visitor.visitInlineTagContent(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1530,6 +1644,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBraceExpression" ):
                 listener.exitBraceExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBraceExpression" ):
+                return visitor.visitBraceExpression(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1596,6 +1716,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBraceContent" ):
                 listener.exitBraceContent(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBraceContent" ):
+                return visitor.visitBraceContent(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1685,6 +1811,12 @@ class JavadocParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBraceText" ):
                 listener.exitBraceText(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBraceText" ):
+                return visitor.visitBraceText(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 

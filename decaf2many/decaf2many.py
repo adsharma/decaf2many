@@ -1,8 +1,8 @@
 """Main module."""
 
-from .lang.JavaParserListener import JavaParserListener
+from .lang.JavaParserVisitor import JavaParserVisitor
 
 
-class Transpiler(JavaParserListener):
-    def enterCompilationUnit(self, ctx):
+class Transpiler(JavaParserVisitor):
+    def visitCompilationUnit(self, ctx):
         print("Got here")

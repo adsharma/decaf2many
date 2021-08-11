@@ -15,8 +15,7 @@ def run_one(filename):
     parser = JavaParser(stream)
     tree = parser.compilationUnit()
     tx = Transpiler()
-    walker = ParseTreeWalker()
-    walker.walk(tx, tree)
+    tx.visit(tree)
 
 
 def main():

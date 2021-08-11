@@ -1,5 +1,5 @@
 all:
-	antlr4 -Dlanguage=Python3 JavaLexer.g4 
-	antlr4 -Dlanguage=Python3 JavaParser.g4 
-	antlr4 -Dlanguage=Python3 JavadocLexer.g4 
-	antlr4 -Dlanguage=Python3 JavadocParser.g4 
+	antlr4 -Dlanguage=Python3 -visitor JavaLexer.g4 
+	antlr4 -Dlanguage=Python3 -visitor JavaParser.g4 
+	antlr4 -Dlanguage=Python3 -visitor JavadocLexer.g4 
+	antlr4 -Dlanguage=Python3 -visitor JavadocParser.g4 
