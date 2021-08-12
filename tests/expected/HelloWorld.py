@@ -4,7 +4,7 @@
 class HelloWorld:
     @staticmethod
     def main(args: List[str]):
-        Systemprint("Hello, world.")
+        print("Hello, world.")
 
     def add(a: i32, b: i32):
         return a + b

@@ -7,7 +7,7 @@ from .lang.JavaParser import JavaParser
 
 
 class Transpiler(JavaParserVisitor):
-    DISPATCH_MAP = {"println": "print"}
+    DISPATCH_MAP = {"System.out.println": "print"}
     INDENT = " " * 4
     TYPE_MAP = {
         "String": "str",
@@ -22,14 +22,17 @@ class Transpiler(JavaParserVisitor):
         "long": "u64",
     }
     BINARY_OPS = {
+        # Arithmetic
         JavaParser.ADD,
         JavaParser.SUB,
         JavaParser.MUL,
         JavaParser.DIV,
         JavaParser.MOD,
+        # Bitwise
         JavaParser.BITAND,
         JavaParser.BITOR,
         JavaParser.CARET,
+        # Logical
         JavaParser.GT,
         JavaParser.LT,
         JavaParser.GE,
@@ -103,7 +106,7 @@ class Transpiler(JavaParserVisitor):
             + "\n"
             + textwrap.dedent(
                 f"""\
-            def {fname}({params}):
+            def {fname}{params}:
         """
             )
             + body
@@ -118,11 +121,10 @@ class Transpiler(JavaParserVisitor):
         self, ctx: JavaParser.ClassOrInterfaceModifierContext
     ):
         ctx.parentCtx.parentCtx.modifiers.append(ctx.getText())
-        return super().visitClassOrInterfaceModifier(ctx)
+        return ""
 
     def visitMethodCall(self, ctx: JavaParser.MethodCallContext):
         fname = ctx.IDENTIFIER().getText()
-        fname = self._dispatch(fname)
         args = ctx.expressionList()
         args = [args.expression(i) for i in range(args.getChildCount())]
         args_str = ",".join([self.visit(a) for a in args])
@@ -167,11 +169,28 @@ class Transpiler(JavaParserVisitor):
     def visitPrimary(self, ctx: JavaParser.PrimaryContext):
         return ctx.getText()
 
+    def visitTerminal(self, ctx):
+        if ctx.getText() in {"{", "}"}:
+            return ""
+        return ctx.getText()
+
     def visitExpression(self, ctx: JavaParser.ExpressionContext):
         if ctx.bop and ctx.bop.type in self.BINARY_OPS:
             left = self.visit(ctx.expression(0))
             right = self.visit(ctx.expression(1))
             return f"{left} {ctx.bop.text} {right}"
+        elif ctx.bop and ctx.bop.type == JavaParser.DOT:
+            left = self.visit(ctx.getChild(0))
+            right_ctx = ctx.getChild(2)
+            right = self.visit(right_ctx)
+            expr = f"{left}.{right}"
+            if isinstance(right_ctx, JavaParser.MethodCallContext):
+                # TODO: avoid string manipulation
+                method, rest = right.split("(", 1)
+                method_fq = f"{left}.{method}"
+                py_method = self._dispatch(method_fq)
+                return f"{py_method}({rest}"
+            return expr
         return super().visitExpression(ctx)
 
     def visitStatement(self, ctx: JavaParser.StatementContext):
