@@ -27,11 +27,9 @@ class Transpiler(JavaParserVisitor):
         JavaParser.MUL,
         JavaParser.DIV,
         JavaParser.MOD,
-
         JavaParser.BITAND,
         JavaParser.BITOR,
         JavaParser.CARET,
-
         JavaParser.GT,
         JavaParser.LT,
         JavaParser.GE,
@@ -71,17 +69,21 @@ class Transpiler(JavaParserVisitor):
         return "\n".join(comments_str)
 
     def visitCompilationUnit(self, ctx: JavaParser.CompilationUnitContext):
-        c  = self.visitComments(ctx)
+        c = self.visitComments(ctx)
         return c + "\n".join([self.visit(t) for t in ctx.typeDeclaration()]) + "\n"
 
     def visitClassDeclaration(self, ctx: JavaParser.ClassDeclarationContext):
         name = ctx.IDENTIFIER().getText()
         body = self.visit(ctx.classBody())
         body = self.indent(body)
-        return textwrap.dedent(
-            f"""\
+        return (
+            textwrap.dedent(
+                f"""\
             class {name}:
-        """) + body
+        """
+            )
+            + body
+        )
 
     def getDecorator(self, m: str) -> str:
         if m == "static":
@@ -93,17 +95,28 @@ class Transpiler(JavaParserVisitor):
         body = self.visit(ctx.methodBody())
         params = self.visit(ctx.formalParameters())
         body = self.indent(body)
-        modifiers = "\n".join([self.getDecorator(m) for m in ctx.parentCtx.parentCtx.modifiers])
-        return modifiers + "\n" + textwrap.dedent(
-            f"""\
+        modifiers = "\n".join(
+            [self.getDecorator(m) for m in ctx.parentCtx.parentCtx.modifiers]
+        )
+        return (
+            modifiers
+            + "\n"
+            + textwrap.dedent(
+                f"""\
             def {fname}({params}):
-        """) + body + "\n"
+        """
+            )
+            + body
+            + "\n"
+        )
 
     def visitClassBodyDeclaration(self, ctx: JavaParser.ClassBodyDeclarationContext):
         ctx.modifiers = []
         return super().visitClassBodyDeclaration(ctx)
 
-    def visitClassOrInterfaceModifier(self, ctx: JavaParser.ClassOrInterfaceModifierContext):
+    def visitClassOrInterfaceModifier(
+        self, ctx: JavaParser.ClassOrInterfaceModifierContext
+    ):
         ctx.parentCtx.parentCtx.modifiers.append(ctx.getText())
         return super().visitClassOrInterfaceModifier(ctx)
 

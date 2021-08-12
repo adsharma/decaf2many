@@ -12,6 +12,7 @@ from .lang.JavaParser import JavaParser
 
 logger = logging.getLogger("decaf2many")
 
+
 def run_one(args, file_name):
     lexer = JavaLexer(FileStream(file_name))
     stream = CommonTokenStream(lexer)
@@ -38,7 +39,12 @@ def run_one(args, file_name):
 def main(args=None):
     """Console script for decaf2many."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dump", default=False, action="store_true", help="dump ast instead of transpiling")
+    parser.add_argument(
+        "--dump",
+        default=False,
+        action="store_true",
+        help="dump ast instead of transpiling",
+    )
     parser.add_argument("--outdir", default=None, help="Output directory")
     parser.add_argument("-l", "--log-level", default="INFO", help="set log level")
 

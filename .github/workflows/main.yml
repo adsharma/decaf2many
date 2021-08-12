@@ -37,11 +37,8 @@ jobs:
       - name: Install linters
         run: pip install black pyflakes
 
-      - name: Remove tests/cases/*.py & tests/expected/*.py
-        run: rm tests/cases/*.py tests/expected/*.py
+      - name: tests/expected/*.py
+        run: rm tests/expected/*.py
 
       - name: Run black
-        run: black --check */ *.py
-
-      #- name: Run pyflakes
-      #  run: pyflakes */ *.py
+        run: black --exclude decaf2many/lang --check */ *.py
