@@ -198,3 +198,28 @@ class Transpiler(JavaParserVisitor):
             value = self.visit(ctx.expression(0))
             return f"return {value}"
         return super().visitStatement(ctx)
+
+    def visitBlock(self, ctx: JavaParser.BlockContext):
+        # minus 2 because of the terminals {, }
+        stmts = [ctx.blockStatement(i) for i in range(ctx.getChildCount() - 2)]
+        return "\n".join([self.visit(s) for s in stmts])
+
+    def visitLocalVariableDeclaration(
+        self, ctx: JavaParser.LocalVariableDeclarationContext
+    ):
+        decls = ctx.variableDeclarators()
+        return " ".join(
+            [
+                self.visit(decls.variableDeclarator(i))
+                for i in range(decls.getChildCount())
+            ]
+        )
+
+    def visitVariableDeclarator(self, ctx: JavaParser.VariableDeclaratorContext):
+        return " ".join([self.visit(c) for c in ctx.getChildren()])
+
+    def visitBlockStatement(self, ctx: JavaParser.BlockStatementContext):
+        children = list(ctx.getChildren())
+        if children[-1] == ctx.SEMI():
+            children = children[:-1]
+        return " ".join([self.visit(c) for c in children])
