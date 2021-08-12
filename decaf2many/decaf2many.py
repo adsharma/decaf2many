@@ -21,6 +21,26 @@ class Transpiler(JavaParserVisitor):
         "Long": "u64",
         "long": "u64",
     }
+    BINARY_OPS = {
+        JavaParser.ADD,
+        JavaParser.SUB,
+        JavaParser.MUL,
+        JavaParser.DIV,
+        JavaParser.MOD,
+
+        JavaParser.BITAND,
+        JavaParser.BITOR,
+        JavaParser.CARET,
+
+        JavaParser.GT,
+        JavaParser.LT,
+        JavaParser.GE,
+        JavaParser.LE,
+        JavaParser.EQUAL,
+        JavaParser.NOTEQUAL,
+        JavaParser.AND,
+        JavaParser.OR,
+    }
 
     def __init__(self) -> None:
         super().__init__()
@@ -52,7 +72,7 @@ class Transpiler(JavaParserVisitor):
 
     def visitCompilationUnit(self, ctx: JavaParser.CompilationUnitContext):
         c  = self.visitComments(ctx)
-        return c + "\n".join([self.visit(t) for t in ctx.typeDeclaration()])
+        return c + "\n".join([self.visit(t) for t in ctx.typeDeclaration()]) + "\n"
 
     def visitClassDeclaration(self, ctx: JavaParser.ClassDeclarationContext):
         name = ctx.IDENTIFIER().getText()
@@ -77,7 +97,7 @@ class Transpiler(JavaParserVisitor):
         return modifiers + "\n" + textwrap.dedent(
             f"""\
             def {fname}({params}):
-        """) + body
+        """) + body + "\n"
 
     def visitClassBodyDeclaration(self, ctx: JavaParser.ClassBodyDeclarationContext):
         ctx.modifiers = []
@@ -130,3 +150,19 @@ class Transpiler(JavaParserVisitor):
         if len(ctx.LBRACK()):
             return f"List[{base}]"
         return base
+
+    def visitPrimary(self, ctx: JavaParser.PrimaryContext):
+        return ctx.getText()
+
+    def visitExpression(self, ctx: JavaParser.ExpressionContext):
+        if ctx.bop and ctx.bop.type in self.BINARY_OPS:
+            left = self.visit(ctx.expression(0))
+            right = self.visit(ctx.expression(1))
+            return f"{left} {ctx.bop.text} {right}"
+        return super().visitExpression(ctx)
+
+    def visitStatement(self, ctx: JavaParser.StatementContext):
+        if ctx.RETURN():
+            value = self.visit(ctx.expression(0))
+            return f"return {value}"
+        return super().visitStatement(ctx)
