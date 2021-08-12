@@ -7,4 +7,4 @@ class HelloWorld:
         Systemprint("Hello, world.")
 
     def add(a: i32, b: i32):
-        return a == b
+        return a + b
