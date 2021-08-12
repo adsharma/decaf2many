@@ -1,8 +1,9 @@
 """Console script for decaf2many."""
 import argparse
 import logging
+import sys
 
-from antlr4 import CommonTokenStream, FileStream
+from antlr4 import CommonTokenStream, FileStream, StdinStream
 from antlr4.tree.Trees import Trees
 from pathlib import Path
 
@@ -13,27 +14,31 @@ from .lang.JavaParser import JavaParser
 logger = logging.getLogger("decaf2many")
 
 
-def run_one(args, file_name):
-    lexer = JavaLexer(FileStream(file_name))
+def run_one(args, file_name) -> int:
+    file_stream = StdinStream() if file_name == "-" else FileStream(file_name)
+    lexer = JavaLexer(file_stream)
     stream = CommonTokenStream(lexer)
     parser = JavaParser(stream)
     tree = parser.compilationUnit()
     if args.dump:
         print(Trees.toStringTree(tree, None, parser))
-        return
+        return 0
     tx = Transpiler()
     out = tx.visit(tree)
-    file_path = Path(file_name)
-    if args.outdir:
-        out_dir = Path(args.outdir)
-        out_dir.mkdir(parents=True, exist_ok=True)
+    if file_name != "-":
+        file_path = Path(file_name)
+        if args.outdir:
+            out_dir = Path(args.outdir)
+            out_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            out_dir = Path(".")
+        out_path = out_dir / Path(file_path.stem + ".py")
+        with open(out_path, "w") as f:
+            f.write(out)
+        logger.info(f"wrote output to: {out_path}")
     else:
-        out_dir = Path(".")
-    out_path = out_dir / Path(file_path.stem + ".py")
-    with open(out_path, "w") as f:
-        f.write(out)
-    logger.info(f"wrote output to: {out_path}")
-    return
+        sys.stdout.write(out)
+    return 0
 
 
 def main(args=None):
@@ -61,4 +66,9 @@ def main(args=None):
         logging.error(f"Invalid log level: {args.log_level}")
         sys.exit(1)
 
-    return run_one(args, rest[0])
+    rv = 0
+    if len(rest) == 0:
+        rest = ["-"]
+    for infile in rest:
+        rv |= run_one(args, infile)
+    return rv
