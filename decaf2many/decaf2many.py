@@ -11,6 +11,15 @@ class Transpiler(JavaParserVisitor):
     INDENT = " " * 4
     TYPE_MAP = {
         "String": "str",
+        "Integer": "i32",
+        "int": "i32",
+        "Boolean": "bool",
+        "boolean": "bool",
+        "Double": "float",
+        "double": "float",
+        "char": "u16",
+        "Long": "u64",
+        "long": "u64",
     }
 
     def __init__(self) -> None:
@@ -94,7 +103,7 @@ class Transpiler(JavaParserVisitor):
 
     def visitFormalParameterList(self, ctx: JavaParser.FormalParameterListContext):
         params = [ctx.formalParameter(i) for i in range(ctx.getChildCount())]
-        return ",".join([self.visit(a) for a in params])
+        return ", ".join([self.visit(a) for a in params if a is not None])
 
     def visitFormalParameter(self, ctx: JavaParser.FormalParameterContext):
         name = self.visit(ctx.variableDeclaratorId())
@@ -108,8 +117,16 @@ class Transpiler(JavaParserVisitor):
         java_type = ctx.getText()
         return self.TYPE_MAP[java_type]
 
+    def visitPrimitiveType(self, ctx: JavaParser.PrimitiveTypeContext):
+        java_type = ctx.getText()
+        return self.TYPE_MAP[java_type]
+
     def visitTypeType(self, ctx: JavaParser.TypeTypeContext):
-        base = self.visit(ctx.classOrInterfaceType())
-        if ctx.LBRACK:
+        base = "UnknownType"
+        if ctx.classOrInterfaceType():
+            base = self.visit(ctx.classOrInterfaceType())
+        elif ctx.primitiveType():
+            base = self.visit(ctx.primitiveType())
+        if len(ctx.LBRACK()):
             return f"List[{base}]"
         return base
