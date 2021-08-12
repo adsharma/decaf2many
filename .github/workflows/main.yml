@@ -1,0 +1,47 @@
+name: CI
+
+# Controls when the action will run.
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install tox
+        run: |
+          pip3 --version
+          pip3 install setuptools tox
+
+      - name: Run tox
+        shell: bash
+        run: |
+          tox
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install linters
+        run: pip install black pyflakes
+
+      - name: Remove tests/cases/*.py & tests/expected/*.py
+        run: rm tests/cases/*.py tests/expected/*.py
+
+      - name: Run black
+        run: black --check */ *.py
+
+      #- name: Run pyflakes
+      #  run: pyflakes */ *.py
