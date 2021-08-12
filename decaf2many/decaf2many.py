@@ -68,6 +68,8 @@ class Transpiler(JavaParserVisitor):
     def visitComments(self, ctx):
         pos = ctx.getSourceInterval()[0]
         comments = ctx.parser.getTokenStream().getHiddenTokensToLeft(pos)
+        if comments is None:
+            return ""
         comments_str = [self.visitComment(c, ctx.parser) for c in comments]
         return "\n".join(comments_str)
 
